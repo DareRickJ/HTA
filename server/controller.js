@@ -170,21 +170,11 @@ const controller = {
           let cookie = Cookie();
           User.update({ cookie, cookieExpireTime }, { where: { id: user.id } })
             .then(() => {
-
-              HowToAsk.findOne({ where: { user_id: user.id } })
-                .then(hta => {
-                  HowToAsk.findOne({ where: { user_id: user.id } })
-                  res.status(200).send({
-                    id: user.id,
-                    cookie,
-                    cookieExpireTime,
-                  });
-                })
-                .catch(err => {
-                  console.log('error from howtoask find one');
-                  res.status(404).send("error from howtoask find one");
-                })
-
+              res.status(200).send({
+                id: user.id,
+                cookie,
+                cookieExpireTime,
+              });
             })
             .catch(err => {
               console.error('error from signin, unable to update info');
