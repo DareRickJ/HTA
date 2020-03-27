@@ -9,12 +9,12 @@ const ChooseDonor = ({ chooseDonor, navigateBack }) => {
     document.getElementsByClassName('chooseDonor')[0].style.opacity = 1
   };
   return (
+   
     <div className='chooseDonor'>
       <div className='chooseDonorTitle'>
         <h1>Donor Select</h1>
         <div className='TitleUnderline'></div>
-      </div>
-
+      </div>      
       <div className='personContainer'>
         <div
           id="Jennifer"
@@ -60,6 +60,10 @@ const ChooseDonor = ({ chooseDonor, navigateBack }) => {
           }, 800);
         }}
       />
+
+
+    <button name='GameTutoralButton' className = 'tutorlButton'  onClick={() => {document.getElementsByClassName('GameTutoral')[0].style.opacity = 0; } }> Tutoral? </button>
+    
     </div>
   );
 };

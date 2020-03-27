@@ -13,6 +13,18 @@
   height: 100vh;
   width: 100vw;
 }
+.tutorlButton
+{
+  z-index: 5;
+    position: absolute;
+    top: 87vh;
+    left: 75vw;
+    padding: 4px 25px;
+    background-color: deepskyblue;
+    font-weight: bold;
+    font-size: 3vh;
+    border-radius: 1vh;
+}
 .Ttext{
   position: absolute;
     top: 23vh;
@@ -23,6 +35,7 @@
     text-align: center;
     padding: 3vw 1vh;
     font-size: 3vh;
+    border-radius: 1vw;
 }
 .tButton{
   z-index: 5;
@@ -32,17 +45,27 @@
   padding: 8px 21px;
   background-color: limegreen;
   font-weight: bold;
-  font-size: 3vh
+  font-size: 3vh;
+  border-radius: 2vh;
 }
 .tSkip {
   z-index: 5;
+    position: absolute;
+    top: 56vh;
+    left: 10vw;
+    padding: 4px 25px;
+    background-color: gray;
+    font-weight: bold;
+    font-size: 3vh;
+    border-radius: 2vh;
+}
+.Orical
+{
   position: absolute;
-  top: 55vh;
-  left: 10vw;
-  padding: 4px 25px;
-  background-color: gray;
-  font-weight: bold;
-  font-size: 3vh;
+    top: 55vh;
+    z-index: 2;
+    left: 8vw;
+    width: 41vw;
 }
 body {
   margin: 0;
