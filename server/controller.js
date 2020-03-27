@@ -1,57 +1,47 @@
-const User = require('../database/index.js');
+const { User, HowToAsk, RoundTable } = require('../database/index.js');
 const Cookie = require('./coockieGenerator');
 const bcrypt = require('bcrypt');
 
 
 const controller = {
-  getAll: (req, res) => {
-    let hash = bcrypt.hashSync('myPassword', 10);
-    if (bcrypt.compareSync('myPassword', hash)) {
-      console.log("match")
-    } else {
-      console.log("not match")
-    }
+  HTAgetAll: (req, res) => {
     User.findAll()
       .then(arr => {
         let newArr = [];
         for (let data of arr) {
-          newArr.push({
-            id: data.id,
-            userName: data.userName,
-            cookie: data.cookie,
-            cookieExpireTime: data.cookieExpireTime,
-            JenTelScore: data.JenTelScore,
-            JenMeetScore: data.JenMeetScore,
-            SharrelTelScore: data.SharrelTelScore,
-            SharrelMeetScore: data.SharrelMeetScore,
-            JPTelScore: data.JPTelScore,
-            JPMeetScore: data.JPMeetScore,
-            tutorial: data.tutorial
-          })
+          HowToAsk.findOne({ where: { user_id: data.id } })
+            .then(data2 => {
+              newArr.push({
+                id: data.id,
+                userName: data.userName,
+                cookie: data.cookie,
+                cookieExpireTime: data.cookieExpireTime,
+              })
+            })
+            .catch(err => {
+              console.error(err);
+              res.status(404).send("error from getAll");
+            });
         }
         res.status(200).send(newArr);
       })
       .catch(err => {
         console.error(err);
-        res.status(404).send("error from getAll")
+        res.status(404).send("error from getAll");
       });
   },
 
-  getUser: (req, res) => {
-    User.findOne({ where: { id: req.params.id } })
-      .then(data => {
+  HTAgetUser: (req, res) => {
+    HowToAsk.findOne({ where: { user_id: req.params.id } })
+      .then(hta => {
         let obj = {
-          id: data.id,
-          userName: data.userName,
-          cookie: data.cookie,
-          cookieExpireTime: data.cookieExpireTime,
-          JenTelScore: data.JenTelScore,
-          JenMeetScore: data.JenMeetScore,
-          SharrelTelScore: data.SharrelTelScore,
-          SharrelMeetScore: data.SharrelMeetScore,
-          JPTelScore: data.JPTelScore,
-          JPMeetScore: data.JPMeetScore,
-          tutorial: data.tutorial
+          JenTelScore: hta.JenTelScore,
+          JenMeetScore: hta.JenMeetScore,
+          SharrelTelScore: hta.SharrelTelScore,
+          SharrelMeetScore: hta.SharrelMeetScore,
+          JPTelScore: hta.JPTelScore,
+          JPMeetScore: hta.JPMeetScore,
+          tutorial: hta.tutorial
         };
         res.status(200).send(obj);
       })
@@ -61,39 +51,38 @@ const controller = {
       });
   },
 
-  updateUser: (req, res) => {
+  HTAupdateUser: (req, res) => {
     if (!req.body.cookie) {
       console.log('expired');
       res.status(440).send("session expired");
     } else {
+      let newCookie = Cookie();
       let cookieExpireTime = new Date(new Date().getTime() + (1 * 60 * 60 * 1000));
-      let newObj = { ...req.body, cookieExpireTime };
-      User.update(newObj, {
+      User.update({
+        cookie: newCookie,
+        cookieExpireTime
+      }, {
         where: {
           id: req.params.id,
-          cookie: newObj.cookie
+          cookie: req.body.cookie
         }
       })
         .then(() => {
-          User.findOne({ where: { id: req.params.id } })
-            .then(data => {
-              let obj = {
-                userName: data.userName,
-                cookieExpireTime: data.cookieExpireTime,
-                JenTelScore: data.JenTelScore,
-                JenMeetScore: data.JenMeetScore,
-                SharrelTelScore: data.SharrelTelScore,
-                SharrelMeetScore: data.SharrelMeetScore,
-                JPTelScore: data.JPTelScore,
-                JPMeetScore: data.JPMeetScore,
-                tutorial: data.tutorial
-              };
-              res.status(200).send(obj);
+
+          let { JenTelScore, JenMeetScore, SharrelTelScore, SharrelMeetScore, JPTelScore, JPMeetScore, tutorial } = req.body;
+          HowToAsk.update({
+            JenTelScore, JenMeetScore, SharrelTelScore, SharrelMeetScore, JPTelScore, JPMeetScore, tutorial
+          }, {
+            where: { user_id: req.params.id }
+          })
+            .then(() => {
+              res.status(200).send({ cookie: newCookie, cookieExpireTime });
             })
             .catch(err => {
-              console.error("error from finding updated user");
-              res.status(404).send("error from finding updated user")
+              console.error("error from updating HTA game data");
+              res.status(404).send("error from updating HTA game data")
             });
+
         })
         .catch(err => {
           console.error("error from updating user");
@@ -106,7 +95,25 @@ const controller = {
   delUser: (req, res) => {
     User.destroy({ where: { id: req.params.id } })
       .then(() => {
-        res.status(200).send("success delete user");
+
+        HowToAsk.destroy({ where: { user_id: req.params.id } })
+          .then(() => {
+
+            RoundTable.destroy({ where: { user_id: req.params.id } })
+              .then(() => {
+                res.status(200).send("success delete user");
+              })
+              .catch(err => {
+                console.error(err);
+                res.status(404).send("error from del RoundTable user_id")
+              });
+
+          })
+          .catch(err => {
+            console.error(err);
+            res.status(404).send("error from del HowtoAsk user_id")
+          });
+
       })
       .catch(err => {
         console.error(err);
@@ -117,21 +124,47 @@ const controller = {
   newUser: (req, res) => {
     let userId = Math.ceil(Math.random() * 2147483640);
     let hash = bcrypt.hashSync(req.body.password.split('.')[1], 10);
-    let newUser = { id: userId, ...req.body, password: hash };
+    let newUser = {
+      id: userId,
+      userName: req.body.userName,
+      password: hash,
+      cookie: req.body.cookie,
+      cookieExpireTime: req.body.cookieExpireTime
+    };
+    let newUserId = {
+      user_id: userId,
+    }
     User.create(newUser)
       .then(() => {
-        User.findOne({ where: { id: userId } })
+
+        HowToAsk.create(newUserId)
           .then(() => {
-            res.status(200).send("new user created");
+
+            RoundTable.create(newUserId)
+              .then(() => {
+                res.status(200).send("new user created");
+              })
+              .catch(err => {
+                if (err.name === 'SequelizeUniqueConstraintError') {
+                  res.status(409).send('user name already exists in RT');
+                } else {
+                  res.status(404).send("error from RT newUser");
+                }
+              });
+
           })
           .catch(err => {
-            console.error(err);
-            res.status(404).send("error from newUser")
+            if (err.name === 'SequelizeUniqueConstraintError') {
+              res.status(409).send('user name already exists in HTA');
+            } else {
+              res.status(404).send("error from HTA newUser");
+            }
           });
+
       })
       .catch(err => {
         if (err.name === 'SequelizeUniqueConstraintError') {
-          res.status(409).send('user name already exists');
+          res.status(409).send('user name already exists in User');
         } else {
           res.status(404).send("error from newUser");
         }
@@ -149,18 +182,28 @@ const controller = {
           let cookie = Cookie();
           User.update({ cookie, cookieExpireTime }, { where: { id: user.id } })
             .then(() => {
-              res.status(200).send({
-                id: user.id,
-                cookie,
-                cookieExpireTime,
-                JenTelScore: user.JenTelScore,
-                JenMeetScore: user.JenMeetScore,
-                SharrelTelScore: user.SharrelTelScore,
-                SharrelMeetScore: user.SharrelMeetScore,
-                JPTelScore: user.JPTelScore,
-                JPMeetScore: user.JPMeetScore,
-                tutorial: user.tutorial
-              });
+
+              HowToAsk.findOne({ where: { user_id: user.id } })
+                .then(hta => {
+                  HowToAsk.findOne({ where: { user_id: user.id } })
+                  res.status(200).send({
+                    id: user.id,
+                    cookie,
+                    cookieExpireTime,
+                    // JenTelScore: hta.JenTelScore,
+                    // JenMeetScore: hta.JenMeetScore,
+                    // SharrelTelScore: hta.SharrelTelScore,
+                    // SharrelMeetScore: hta.SharrelMeetScore,
+                    // JPTelScore: hta.JPTelScore,
+                    // JPMeetScore: hta.JPMeetScore,
+                    // tutorial: hta.tutorial
+                  });
+                })
+                .catch(err => {
+                  console.log('error from howtoask find one');
+                  res.status(404).send("error from howtoask find one");
+                })
+
             })
             .catch(err => {
               console.error('error from signin, unable to update info');

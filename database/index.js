@@ -2,8 +2,10 @@ const Sequelize = require('sequelize');
 var mysql = require('mysql');
 
 
-const dbName = 'howtoask';
+const dbName = 'changelab';
 const userTable = 'users';
+const howToAskTable = 'howtoasks';
+const roundTableTable = 'roundtables';
 
 let connection = mysql.createConnection({
   host: "localhost",
@@ -60,6 +62,18 @@ const User = sequelize.define(userTable, {
     type: Sequelize.DATE,
     allowNull: true
   },
+});
+
+
+const HowToAsk = sequelize.define(howToAskTable, {
+  user_id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    references: {
+      model: User,
+      key: 'id'
+    }
+  },
   JenTelScore: {
     type: Sequelize.INTEGER,
     allowNull: false,
@@ -98,9 +112,41 @@ const User = sequelize.define(userTable, {
 });
 
 
+const RoundTable = sequelize.define(roundTableTable, {
+  user_id: {
+    type: Sequelize.INTEGER,
+    primaryKey: true,
+    references: {
+      model: User,
+      key: 'id'
+    }
+  },
+  Jen: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  Sharrel: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  JP: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  tutorial: {
+    type: Sequelize.BOOLEAN,
+    allowNull: false,
+    defaultValue: true
+  },
+});
+
 sequelize.sync({ force: false }) // set to TRUE, only when the schema is changed, this will drop the existing table & database.
   .then(() => console.log(`Table ${userTable} has been synced.`))
   .catch(error => console.log(error));
 
 
-module.exports = User;
+
+module.exports = { User, HowToAsk, RoundTable };

@@ -10,7 +10,7 @@ const Admin = ({ userName, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMe
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='JenTelScore' value={-1} onClick={buttonHandler}> - </button>
         </div>
-        <p style={{ margin: 0 }}>Score: {JenTelScore}</p>
+        <p style={{ margin: 0 }}>Jen Tel Score: {JenTelScore}</p>
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='JenTelScore' value={1} onClick={buttonHandler}> + </button>
         </div>
@@ -19,7 +19,7 @@ const Admin = ({ userName, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMe
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='JenMeetScore' value={-1} onClick={buttonHandler}> - </button>
         </div>
-        <p style={{ margin: 0 }}>Score: {JenMeetScore}</p>
+        <p style={{ margin: 0 }}>Jen Meeting Score: {JenMeetScore}</p>
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='JenMeetScore' value={1} onClick={buttonHandler}> + </button>
         </div>
@@ -29,7 +29,7 @@ const Admin = ({ userName, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMe
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='SharrelTelScore' value={-1} onClick={buttonHandler}> - </button>
         </div>
-        <p style={{ margin: 0 }}>Score: {SharrelTelScore}</p>
+        <p style={{ margin: 0 }}>Sharrel Tel Score: {SharrelTelScore}</p>
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='SharrelTelScore' value={1} onClick={buttonHandler}> + </button>
         </div>
@@ -38,7 +38,7 @@ const Admin = ({ userName, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMe
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='SharrelMeetScore' value={-1} onClick={buttonHandler}> - </button>
         </div>
-        <p style={{ margin: 0 }}>Score: {SharrelMeetScore}</p>
+        <p style={{ margin: 0 }}>Sharrel Meeting Score: {SharrelMeetScore}</p>
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='SharrelMeetScore' value={1} onClick={buttonHandler}> + </button>
         </div>
@@ -48,7 +48,7 @@ const Admin = ({ userName, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMe
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='JPTelScore' value={-1} onClick={buttonHandler}> - </button>
         </div>
-        <p style={{ margin: 0 }}>Score: {JPTelScore}</p>
+        <p style={{ margin: 0 }}>JP Tel Score: {JPTelScore}</p>
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='JPTelScore' value={1} onClick={buttonHandler}> + </button>
         </div>
@@ -57,7 +57,7 @@ const Admin = ({ userName, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMe
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='JPMeetScore' value={-1} onClick={buttonHandler}> - </button>
         </div>
-        <p style={{ margin: 0 }}>Score: {JPMeetScore}</p>
+        <p style={{ margin: 0 }}>JP Meeting Score: {JPMeetScore}</p>
         <div style={{ height: 20, margin: '0 10px' }}>
           <button name='JPMeetScore' value={1} onClick={buttonHandler}> + </button>
         </div>

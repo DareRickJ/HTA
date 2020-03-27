@@ -2,18 +2,24 @@ const router = require('express').Router();
 const controller = require('./controller.js');
 
 router
-  .route('/user/:id')
-  .get(controller.getUser)
-  .put(controller.updateUser)
-  .delete(controller.delUser);
+  .route('/howToAsk/:id')
+  .get(controller.HTAgetUser)
+  .put(controller.HTAupdateUser)
 
 router
-  .route('/user')
-  .get(controller.getAll)
-  .post(controller.newUser);
+  .route('/howToAsk')
+  .get(controller.HTAgetAll)
 
 router
-  .route('/signin')
-  .post(controller.signInUser);
+  .route('/auth/signup')
+  .post(controller.newUser)
+
+router
+  .route('/auth/signin')
+  .post(controller.signInUser)
+
+router
+  .route('/auth/:id')
+  .delete(controller.delUser)
 
 module.exports = router;
