@@ -20,8 +20,12 @@ const controller = {
             userName: data.userName,
             cookie: data.cookie,
             cookieExpireTime: data.cookieExpireTime,
-            score: data.score,
-            progress: data.progress,
+            JenTelScore: data.JenTelScore,
+            JenMeetScore: data.JenMeetScore,
+            SharrelTelScore: data.SharrelTelScore,
+            SharrelMeetScore: data.SharrelMeetScore,
+            JPTelScore: data.JPTelScore,
+            JPMeetScore: data.JPMeetScore,
             tutorial: data.tutorial
           })
         }
@@ -41,8 +45,12 @@ const controller = {
           userName: data.userName,
           cookie: data.cookie,
           cookieExpireTime: data.cookieExpireTime,
-          score: data.score,
-          progress: data.progress,
+          JenTelScore: data.JenTelScore,
+          JenMeetScore: data.JenMeetScore,
+          SharrelTelScore: data.SharrelTelScore,
+          SharrelMeetScore: data.SharrelMeetScore,
+          JPTelScore: data.JPTelScore,
+          JPMeetScore: data.JPMeetScore,
           tutorial: data.tutorial
         };
         res.status(200).send(obj);
@@ -72,8 +80,12 @@ const controller = {
               let obj = {
                 userName: data.userName,
                 cookieExpireTime: data.cookieExpireTime,
-                score: data.score,
-                progress: data.progress,
+                JenTelScore: data.JenTelScore,
+                JenMeetScore: data.JenMeetScore,
+                SharrelTelScore: data.SharrelTelScore,
+                SharrelMeetScore: data.SharrelMeetScore,
+                JPTelScore: data.JPTelScore,
+                JPMeetScore: data.JPMeetScore,
                 tutorial: data.tutorial
               };
               res.status(200).send(obj);
@@ -141,8 +153,12 @@ const controller = {
                 id: user.id,
                 cookie,
                 cookieExpireTime,
-                score: user.score,
-                progress: user.progress,
+                JenTelScore: user.JenTelScore,
+                JenMeetScore: user.JenMeetScore,
+                SharrelTelScore: user.SharrelTelScore,
+                SharrelMeetScore: user.SharrelMeetScore,
+                JPTelScore: user.JPTelScore,
+                JPMeetScore: user.JPMeetScore,
                 tutorial: user.tutorial
               });
             })

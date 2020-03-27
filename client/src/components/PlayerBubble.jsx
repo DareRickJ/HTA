@@ -6,7 +6,9 @@ const PlayerBubble = ({ id, text, point, nextArray, dialogueHandler }) => {
       id={id}
       className={text === ' . . . ' ? 'bubbleButton tripleDots' : 'bubbleButton'}
       onClick={() => {
-        if (myVideo.getAttribute('name') === 'false') {
+        if (text === ' . . . ') {
+          document.getElementById('respondButton').click();
+        } else {
           dialogueHandler(true, nextArray, id, point);
         }
       }}

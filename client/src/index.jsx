@@ -27,8 +27,12 @@ class App extends React.Component {
       id: '',
       userName: '',
       password: '',
-      score: 0,
-      progress: 0,
+      JenTelScore: 0,
+      JenMeetScore: 0,
+      SharrelTelScore: 0,
+      SharrelMeetScore: 0,
+      JPTelScore: 0,
+      JPMeetScore: 0,
       tutorial: true,
       allUsers: [],
       currentVideo: "",
@@ -93,15 +97,19 @@ class App extends React.Component {
       .then(res => {
         return res.json()
       })
-      .then(({ id, cookie, cookieExpireTime, score, progress, tutorial }) => {
+      .then(({ id, cookie, cookieExpireTime, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMeetScore, JPTelScore, JPMeetScore, tutorial }) => {
         let inAnHour = new Date(cookieExpireTime);
         window.Cookies.set('cookie', cookie, { expires: inAnHour });
         this.setState({
           userName,
           authenticate: 'passed',
           id,
-          score: Number(score),
-          progress: Number(progress),
+          JenTelScore: Number(JenTelScore),
+          JenMeetScore: Number(JenMeetScore),
+          SharrelTelScore: Number(SharrelTelScore),
+          SharrelMeetScore: Number(SharrelMeetScore),
+          JPTelScore: Number(JPTelScore),
+          JPMeetScore: Number(JPMeetScore),
           tutorial
         });
         this.getAllUsers();
@@ -225,14 +233,18 @@ class App extends React.Component {
             return response.json();
           }
         })
-        .then(({ id, cookie, cookieExpireTime, score, progress, tutorial }) => {
+        .then(({ id, cookie, cookieExpireTime, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMeetScore, JPTelScore, JPMeetScore, tutorial }) => {
           let inAnHour = new Date(cookieExpireTime);
           window.Cookies.set('cookie', cookie, { expires: inAnHour });
           this.setState({
             authenticate: 'passed',
             id,
-            score: Number(score),
-            progress: Number(progress),
+            JenTelScore: Number(JenTelScore),
+            JenMeetScore: Number(JenMeetScore),
+            SharrelTelScore: Number(SharrelTelScore),
+            SharrelMeetScore: Number(SharrelMeetScore),
+            JPTelScore: Number(JPTelScore),
+            JPMeetScore: Number(JPMeetScore),
             tutorial
           });
           if (document.getElementById("authentication")) {
@@ -275,8 +287,12 @@ class App extends React.Component {
       id: '',
       userName: '',
       password: '',
-      score: 0,
-      progress: 0,
+      JenTelScore: 0,
+      JenMeetScore: 0,
+      SharrelTelScore: 0,
+      SharrelMeetScore: 0,
+      JPTelScore: 0,
+      JPMeetScore: 0,
       tutorial: true,
     });
     document.getElementById("authentication").reset();
@@ -287,7 +303,7 @@ class App extends React.Component {
       this.setState({
         tutorial: !this.state.tutorial
       });
-    } else { // progress & score
+    } else { // change telscore & meetingscore
       e.preventDefault();
       this.setState({
         [e.target.name]: this.state[e.target.name] + Number(e.target.value)
@@ -302,8 +318,12 @@ class App extends React.Component {
       authenticate: 'login',
       password: '',
       id: '',
-      score: 0,
-      progress: 0,
+      JenTelScore: 0,
+      JenMeetScore: 0,
+      SharrelTelScore: 0,
+      SharrelMeetScore: 0,
+      JPTelScore: 0,
+      JPMeetScore: 0,
       tutorial: true
     }, () => {
       this.trySignInWithCookie();
@@ -313,7 +333,7 @@ class App extends React.Component {
   updateHandler(e) {
     e.preventDefault();
     let cookie = Cookies.get('cookie') || '';
-    let { id, userName, score, progress, tutorial } = this.state;
+    let { id, userName, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMeetScore, JPTelScore, JPMeetScore, tutorial } = this.state;
     fetch(`${address}/api/user/${id}`, {
       method: 'PUT',
       headers: {
@@ -322,8 +342,12 @@ class App extends React.Component {
       body: JSON.stringify({
         userName,
         cookie,
-        score,
-        progress,
+        JenTelScore,
+        JenMeetScore,
+        SharrelTelScore,
+        SharrelMeetScore,
+        JPTelScore,
+        JPMeetScore,
         tutorial,
       })
     })
@@ -335,13 +359,17 @@ class App extends React.Component {
           return response.json();
         }
       })
-      .then(({ cookieExpireTime, score, progress, tutorial }) => {
+      .then(({ cookieExpireTime, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMeetScore, JPTelScore, JPMeetScore, tutorial }) => {
         let inAnHour = new Date(cookieExpireTime);
         let cookie = Cookies.get('cookie');
         Cookies.set('cookie', cookie, { expires: inAnHour });
         this.setState({
-          score: Number(score),
-          progress: Number(progress),
+          JenTelScore: Number(JenTelScore),
+          JenMeetScore: Number(JenMeetScore),
+          SharrelTelScore: Number(SharrelTelScore),
+          SharrelMeetScore: Number(SharrelMeetScore),
+          JPTelScore: Number(JPTelScore),
+          JPMeetScore: Number(JPMeetScore),
           tutorial
         }, () => {
           this.getAllUsers();
@@ -361,30 +389,46 @@ class App extends React.Component {
 
   dialogueHandler(player, newDialogue, skip, point) {
     let { subScore, playerDialogues, gameChosen, playerClickable } = this.state;
-    if (typeof newDialogue === 'string' && newDialogue.includes('End')) {
+    if (typeof newDialogue === 'string' && (newDialogue.includes('End') || newDialogue.includes('Natalie'))) {
+      let person = '', status = '', person2 = '', status2 = '', num = "0";
 
-      let person = '', status = '';
-
-      if (gameChosen.includes('Franco')) person = 'Franco';
-      else if (gameChosen.includes('Sharrel')) person = 'Sharrel';
-      else if (gameChosen.includes('JP')) person = 'JP';
-
-      if (newDialogue.includes('telephoneFail')) status = 'telephoneFail';
-      else if (newDialogue.includes('telephoneSuccess')) {
-        // status = 'telephoneSuccess';
-        // this.setState({ gameChosen: person });
+      if (gameChosen.includes('Franco')) {
+        person = 'Franco'; person2 = 'Jen';
+      } else if (gameChosen.includes('Sharrel')) {
+        person = person2 = 'Sharrel';
+      } else if (gameChosen.includes('JP')) {
+        person = person2 = 'JP';
       }
-      else if (newDialogue.includes('meetingFail')) status = 'meetingFail';
-      else if (newDialogue.includes('meetingSuccess')) status = 'meetingSuccess';
-      let pageChosen = status.length > 0 ? `${status} ${person}` : person;
+
+      if (newDialogue.includes('telephoneFail')) {
+        status = 'telephoneFail';
+        status2 = 'Tel';
+      } else if (newDialogue.includes('telephoneSuccess')) {
+        status = 'telephoneSuccess';
+        status2 = 'Tel';
+      } else if (newDialogue.includes('meetingFail')) {
+        status = 'meetingFail';
+        status2 = 'Meet';
+      } else if (newDialogue.includes('meetingSuccess')) {
+        status = 'meetingSuccess';
+        status2 = 'Meet';
+      }
+      num = newDialogue.split(" ")[2];
+      let pageChosen = status.length > 0 ? `${status} ${person} ${num}` : person;
       document.getElementById('videoContainer').style.opacity = 0;
+      if (this.state[person2 + status2 + 'Score'] < subScore) {
+        this.setState({
+          [person2 + status2 + 'Score']: subScore,
+        })
+      }
       setTimeout(() => {
         this.setState({
           donorDialogue: null,
           playerDialogues: [],
           gameChosen: pageChosen,
+          subScore: 0,
         })
-      }, 1000);
+      }, 800);
     } else {
 
       if (player) {
@@ -401,10 +445,16 @@ class App extends React.Component {
           if (subScore + point <= 4) {
             newDialogue = 'Gate2-1';
             this.changeVideoHandler("./assets/Franco2.2.mp4");
-          } else if (5 <= subScore + point && subScore + point <= 6) {
+          } else if (5 == subScore + point) {
             newDialogue = 'Gate2-2'
-          } else {
+          } else if (6 == subScore + point) {
+            newDialogue = 'Gate2-6'
+          } else if (7 <= subScore + point && subScore + point <= 9) {
             newDialogue = 'Gate2-3'
+          } else if (10 == subScore + point) {
+            newDialogue = 'Gate2-4'
+          } else { // 11
+            newDialogue = 'Gate2-5'
           }
         } else if (gameChosen === 'FrancoMeeting' && newDialogue === 'Gate1') {
           if (subScore + point <= 4) {
@@ -445,6 +495,34 @@ class App extends React.Component {
           } else {
             newDialogue = 'Gate1-4'
           }
+        } else if (gameChosen === 'JPPhone' && newDialogue === 'Gate1') {
+          if (subScore + point <= 3) {
+            newDialogue = 'Gate1-1';
+            this.changeVideoHandler("./assets/Franco2.2.mp4");
+          } else if (4 <= subScore + point && subScore + point <= 7) {
+            newDialogue = 'Gate1-2'
+          } else {
+            newDialogue = 'Gate1-3'
+          }
+        } else if (gameChosen === 'JPPhone' && newDialogue === 'Gate2') {
+          if (subScore + point <= 9) {
+            newDialogue = 'Gate2-1';
+            this.changeVideoHandler("./assets/Franco2.2.mp4");
+          } else if (10 <= subScore + point && subScore + point <= 14) {
+            newDialogue = 'Gate2-2'
+          } else {
+            newDialogue = 'Gate2-3'
+          }
+        } else if (gameChosen === 'JPMeeting' && newDialogue === 'Gate1') {
+          if (subScore + point <= 2) {
+            newDialogue = 'Gate1-1'
+          } else if (3 <= subScore + point && subScore + point <= 4) {
+            newDialogue = 'Gate1-2'
+          } else if (5 <= subScore + point && subScore + point <= 6) {
+            newDialogue = 'Gate1-3'
+          } else {
+            newDialogue = 'Gate1-4'
+          }
         }
         if (playerClickable) {
           playerDialogues.forEach((e, i) => {
@@ -452,34 +530,31 @@ class App extends React.Component {
             document.getElementById(String(i)).onclick = () => { };
             if (skip != i) {
               let disappear = document.getElementById(String(i));
-              setTimeout(() => {
-                disappear.style.opacity = 0;
-                disappear.style.left = "-100px";
-              }, 0);
+              disappear.style.opacity = 0;
+              disappear.style.left = "-100px";
               setTimeout(() => {
                 disappear.style.zIndex = -3;
+                disappear.style.transition = 'none';
+                disappear.style.display = 'none'
               }, 800);
             }
           });
-          setTimeout(() => {
-            this.setState({
-              donorDialogue: { text: ' . . . ' },
-              subScore: subScore + point,
-              playerClickable: false,
-              currentAudio: `./assets/Breezy.m4a` // this is just a simulation
-            });
-          }, 800);
+
+          this.setState({
+            subScore: subScore + point,
+            playerClickable: false,
+          })
           setTimeout(() => {
             playerDialogues[skip] = { text: ' . . . ' };
             this.setState({
+              currentAudio: `./assets/Breezy.m4a`, // this is just a simulation
               donorDialogue: Dialogue[gameChosen][newDialogue],
               playerDialogues,
             }, () => {
               document.getElementById('respondButton').click();
             })
-          }, 1600);
+          }, 801);
         }
-
 
       } else { // donor
         let newPlayerDialogues = [];
@@ -490,8 +565,6 @@ class App extends React.Component {
           let prevBubbles = document.getElementsByClassName('tripleDots');
           for (let b of prevBubbles) {
             b.style.opacity = 0;
-            // b.style.left = '-100px';
-            // console.log("hello")
           };
         }
         setTimeout(() => {
@@ -526,25 +599,46 @@ class App extends React.Component {
       this.setState({
         gameChosen: name,
         donorDialogue: Dialogue[name][1],
-        currentVideo: './assets/ss.mp4',
-        currentPoster: './assets/sss.png',
+        currentVideo: './assets/SharrelPhone/SharrelPhoneNeutral.mp4',
+        currentPoster: './assets/SharrelPhone/SharrelPhonePoster.png',
         currentAudio: './assets/Breezy.m4a',
       });
     } else if (name === 'SharrelMeeting') {
       this.setState({
-        playerClickable: true,
         gameChosen: name,
+        playerClickable: true,
         playerDialogues: [Dialogue[name][1]],
+        currentVideo: './assets/SharrelMeeting/SharrelMeetingNeutral.mp4',
+        currentPoster: './assets/SharrelMeeting/SharrelMeetPoster.png',
+        currentAudio: './assets/Breezy.m4a',
+      });
+    } else if (name === 'JPPhone') {
+      this.setState({
+        gameChosen: name,
+        donorDialogue: Dialogue[name][1],
+        currentVideo: './assets/JPPhone/JPPhoneNeutral.mp4',
+        currentPoster: './assets/JPPhone/JPPhonePoster.png',
+        currentAudio: './assets/Breezy.m4a',
+      });
+    } else if (name === 'JPMeeting') {
+      this.setState({
+        gameChosen: name,
+        playerClickable: true,
+        playerDialogues: [Dialogue[name][1]],
+        currentVideo: './assets/JPMeeting/JPMeetingNeutral.mp4',
+        currentPoster: './assets/JPMeeting/JPMeetingPoster.png',
+        currentAudio: './assets/Breezy.m4a',
       });
     }
 
   }
 
   render() {
-    let { playerDialogues, donorDialogue, subScore, warningStatus, authenticate, userNameValid, passwordValid, userName, score, progress, tutorial, allUsers, currentVideo, currentPoster, currentAudio, gameChosen } = this.state;
+    let { playerDialogues, donorDialogue, subScore, warningStatus, authenticate, userNameValid, passwordValid, userName, JenTelScore, JenMeetScore, SharrelTelScore, SharrelMeetScore, JPTelScore, JPMeetScore, tutorial, allUsers, currentVideo, currentPoster, currentAudio, gameChosen } = this.state;
     let gameScreen;
 
-    if (authenticate == 'passed') {
+    if (authenticate !== 'passed') {
+
       gameScreen = <div>
         <Authentication
           userName={userName}
@@ -557,32 +651,38 @@ class App extends React.Component {
           submitHandler={this.submitHandler}
           authenticateSwitch={this.authenticateSwitch}
         />
-      </div>
-      // <div style={{ display: 'table', width: '100%' }}>
-      //   <Admin
-      //     userName={userName}
-      //     score={score}
-      //     progress={progress}
-      //     tutorial={tutorial}
-      //     buttonHandler={this.buttonHandler}
-      //     updateHandler={this.updateHandler}
-      //     logoutHandler={this.logoutHandler}
-      //   />
 
-      //   <div style={{ float: 'left', width: '50%' }}>
-      //     <h2>List of Users</h2>
-      //     <ol style={{ width: '100%' }}>
-      //       {allUsers.map((user, idx) => (
-      //         <li key={idx} >
-      //           <div style={{ width: '100%', display: 'flex' }}>
-      //             <p style={{ width: '50%' }}>{user.userName}, score: {user.score}, progress: {user.progress}, tutorial: {user.tutorial.toString()}, expire: {user.cookieExpireTime} </p>
-      //             <button style={{ padding: '5px', height: '30px', margin: '20px 0' }} onClick={() => this.deleteHandler(user.id)}>del</button>
-      //           </div>
-      //         </li>
-      //       ))}
-      //     </ol>
+      </div>
+      // } else {
+      //   gameScreen = <div style={{ display: 'table', width: '100%' }}>
+      //     <Admin
+      //       userName={userName}
+      //       JenTelScore={JenTelScore}
+      //       JenMeetScore={JenMeetScore}
+      //       SharrelTelScore={SharrelTelScore}
+      //       SharrelMeetScore={SharrelMeetScore}
+      //       JPTelScore={JPTelScore}
+      //       JPMeetScore={JPMeetScore}
+      //       tutorial={tutorial}
+      //       buttonHandler={this.buttonHandler}
+      //       updateHandler={this.updateHandler}
+      //       logoutHandler={this.logoutHandler}
+      //     />
+
+      //     <div style={{ float: 'left', width: '50%' }}>
+      //       <h2>List of Users</h2>
+      //       <ol style={{ width: '100%' }}>
+      //         {allUsers.map((user, idx) => (
+      //           <li key={idx} >
+      //             <div style={{ width: '100%', display: 'flex' }}>
+      //               <p style={{ width: '50%' }}>{user.userName}, JenTelScore: {JenTelScore}, JenMeetScore: {JenMeetScore}, SharrelTelScore: {SharrelTelScore}, SharrelMeetScore: {SharrelMeetScore}, JPTelScore: {JPTelScore}, JPMeetScore: {JPMeetScore}, tutorial: {user.tutorial.toString()}, expire: {user.cookieExpireTime} </p>
+      //               <button style={{ padding: '5px', height: '30px', margin: '20px 0' }} onClick={() => this.deleteHandler(user.id)}>del</button>
+      //             </div>
+      //           </li>
+      //         ))}
+      //       </ol>
+      //     </div>
       //   </div>
-      // </div>
     } else {
       switch (true) {
         case gameChosen === '':
@@ -593,7 +693,9 @@ class App extends React.Component {
         case gameChosen === 'choose':
           gameScreen = <ChooseDonor
             chooseDonor={(name) => {
-              this.setState({ gameChosen: name });
+              this.setState({
+                gameChosen: name,
+              });
             }}
             navigateBack={() => {
               this.setState({ gameChosen: '' })
@@ -603,21 +705,26 @@ class App extends React.Component {
         case (gameChosen === 'Franco' || gameChosen === 'Sharrel' || gameChosen === 'JP'):
           gameScreen = <ChooseCommunication
             name={gameChosen}
+            canGoToMeeting={(gameChosen === 'Franco') ? (JenTelScore > 6) : (gameChosen === 'Sharrel') ? (SharrelTelScore >= 12) : (JPTelScore >= 10)}
             chooseCom={this.chooseGameHandler}
             navigateBack={() => {
-              this.setState({ gameChosen: 'choose' })
+              this.setState({
+                gameChosen: 'choose'
+              })
             }}
           />; break;
 
         case (gameChosen.includes('Fail') || gameChosen.includes('Success')):
+          let num = gameChosen.split(" ")[2];
           gameScreen = <End
             ending={gameChosen}
             goToMain={(page) => {
               this.setState({
                 subScore: 0,
-                gameChosen: page
+                gameChosen: page,
               })
             }}
+            text={Dialogue.Natalie[num].text}
           />; break;
 
         default:

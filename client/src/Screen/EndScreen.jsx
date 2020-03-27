@@ -1,11 +1,12 @@
 import React from 'react';
+import NatalieBubble from '../components/NatalieBubble.jsx';
 
-const End = ({ ending, goToMain }) => {
+
+const End = ({ ending, goToMain, text }) => {
   var bgImg = new Image();
   bgImg.src = './assets/person.png';
   bgImg.onload = function () {
     document.getElementsByClassName('chooseDonor')[0].style.opacity = 1;
-    // document.getElementsByClassName(ending.split(' ')[0])[0].style.opacity = 1
   };
 
   return (
@@ -15,7 +16,11 @@ const End = ({ ending, goToMain }) => {
         onClick={() => {
           document.getElementsByClassName('chooseDonor')[0].style.opacity = 0;
           setTimeout(() => { goToMain(ending.split(' ')[1]); }, 800);
-        }}></div>
+        }}>
+        <NatalieBubble
+          text={text}
+        />
+      </div>
     </div>
   );
 };

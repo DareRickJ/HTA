@@ -9,12 +9,7 @@ const DonorBubble = ({ text, audioUrl }) => {
       id='respondButton'
       className='respondButton'
       onClick={() => {
-        let myVideo = document.getElementById("myVideo");
-        if (myVideo.getAttribute('name') === 'false' && !playing) {
-          toggle();
-          myVideo.setAttribute('name', 'true');
-          myVideo.play();
-        }
+        toggle();
       }}
     >
       <p className='textForRespondButton'>

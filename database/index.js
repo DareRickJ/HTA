@@ -60,12 +60,32 @@ const User = sequelize.define(userTable, {
     type: Sequelize.DATE,
     allowNull: true
   },
-  score: {
+  JenTelScore: {
     type: Sequelize.INTEGER,
     allowNull: false,
     defaultValue: 0
   },
-  progress: {
+  JenMeetScore: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  SharrelTelScore: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  SharrelMeetScore: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  JPTelScore: {
+    type: Sequelize.INTEGER,
+    allowNull: false,
+    defaultValue: 0
+  },
+  JPMeetScore: {
     type: Sequelize.INTEGER,
     allowNull: false,
     defaultValue: 0

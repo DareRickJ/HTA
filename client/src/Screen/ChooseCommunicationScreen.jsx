@@ -11,7 +11,7 @@ class ChooseCommunication extends React.Component { //({ chooseCom, name }) => {
   }
 
   render() {
-    let { chooseCom, name, navigateBack } = this.props;
+    let { chooseCom, name, canGoToMeeting, navigateBack } = this.props;
     let { text } = this.state;
     var bgImg = new Image();
     bgImg.src = './assets/person.png';
@@ -54,7 +54,7 @@ class ChooseCommunication extends React.Component { //({ chooseCom, name }) => {
               }}
             />
           </div>
-          <div className="meeting"
+          {canGoToMeeting && <div className="meeting"
             onClick={() => {
               document.getElementsByClassName('chooseDonor')[0].style.opacity = 0;
               setTimeout(() => { chooseCom(`${name}Meeting`); }, 800);
@@ -80,7 +80,7 @@ class ChooseCommunication extends React.Component { //({ chooseCom, name }) => {
                 document.getElementById('meet').src = `./assets/TheAskPressed${name}.png`;
               }}
             />
-          </div>
+          </div>}
         </div>
 
         {text.length > 0 && <div className='chooseDonorFooter'>
