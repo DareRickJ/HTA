@@ -7,21 +7,9 @@ const controller = {
   HTAgetAll: (req, res) => {
     User.findAll()
       .then(arr => {
-        let newArr = [];
-        for (let data of arr) {
-          HowToAsk.findOne({ where: { user_id: data.id } })
-            .then(data2 => {
-              newArr.push({
-                id: data.id,
-                userName: data.userName,
-                cookie: data.cookie,
-                cookieExpireTime: data.cookieExpireTime,
-              })
-            })
-            .catch(err => {
-              console.error(err);
-              res.status(404).send("error from getAll");
-            });
+        let newArr = []
+        for (let user of arr) {
+          newArr.push({ userName: user.userName, cookieExpireTime: user.cookieExpireTime });
         }
         res.status(200).send(newArr);
       })
@@ -190,13 +178,6 @@ const controller = {
                     id: user.id,
                     cookie,
                     cookieExpireTime,
-                    // JenTelScore: hta.JenTelScore,
-                    // JenMeetScore: hta.JenMeetScore,
-                    // SharrelTelScore: hta.SharrelTelScore,
-                    // SharrelMeetScore: hta.SharrelMeetScore,
-                    // JPTelScore: hta.JPTelScore,
-                    // JPMeetScore: hta.JPMeetScore,
-                    // tutorial: hta.tutorial
                   });
                 })
                 .catch(err => {
